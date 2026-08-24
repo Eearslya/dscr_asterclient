@@ -14,6 +14,7 @@ func _ready() -> void:
 @onready var sound_slider: HScrollBar = $ScrollContainer/MarginContainer/Options/GlobalVolume/VolumeSlider
 @onready var music_slider: HScrollBar = $ScrollContainer/MarginContainer/Options/MusicVolume/VolumeSlider
 @onready var sound_sample: AudioStreamPlayer = $AudioPreview
+@onready var music_sample: AudioStreamPlayer = $MusicAudioPreview
 @onready var invert_pitch: SettingEntry = $ScrollContainer/MarginContainer/Options/ImageMovement/VBoxContainer/InvertPitch
 @onready var invert_yaw: SettingEntry = $ScrollContainer/MarginContainer/Options/ImageMovement/VBoxContainer/InvertYaw
 @onready var invert_zoom: SettingEntry = $ScrollContainer/MarginContainer/Options/ImageMovement/VBoxContainer/InvertZoom
@@ -128,6 +129,8 @@ func _on_volume_slider_value_changed(value):
 func _on_music_slider_value_changed(value):
 	SettingsHandler.music_volume = _volume_slider_to_linear(music_slider, value)
 	SettingsHandler.evaluate_volume()
+	if not music_sample.playing:
+		music_sample.play()
 	save(false, true)
 	pass
 
