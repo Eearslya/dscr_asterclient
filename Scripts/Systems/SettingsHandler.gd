@@ -10,6 +10,7 @@ static var opened_channels: Array = []
 static var websocket_address: String = Main.DSCR_URL
 static var theme_color: int = 57
 static var master_volume: float = 1.0
+static var music_volume: float = 1.0
 static var img_invert_yaw: bool = false
 static var img_invert_pitch: bool = false
 static var img_invert_zoom: bool = false
@@ -38,6 +39,7 @@ static func initialize() -> void:
 	websocket_address = SaveSystem.settings.get_or_add("WebsocketAddress", Main.DSCR_URL)
 	theme_color = SaveSystem.settings.get_or_add("ThemeColor", theme_color)
 	master_volume = SaveSystem.settings.get_or_add("MasterVolume", master_volume)
+	music_volume = SaveSystem.settings.get_or_add("music_volume", music_volume)
 	evaluate_volume()
 	img_invert_pitch = SaveSystem.settings.get_or_add("img_invert_pitch", img_invert_pitch)
 	img_invert_yaw = SaveSystem.settings.get_or_add("img_invert_yaw", img_invert_yaw)
@@ -55,6 +57,15 @@ static func evaluate_volume() -> void:
 	AudioServer.set_bus_mute(
 		AudioServer.get_bus_index("Master"),
 		master_volume <= 0.01
+	)
+
+	AudioServer.set_bus_volume_linear(
+		AudioServer.get_bus_index("Music"),
+		music_volume * 0.667
+	)
+	AudioServer.set_bus_mute(
+		AudioServer.get_bus_index("Music"),
+		music_volume <= 0.01
 	)
 
 static func save() -> void:
@@ -76,3 +87,4 @@ static func export() -> void:
 	SaveSystem.settings.set("do_bbcode", do_bbcode)
 	SaveSystem.settings.set("use_at_undef", use_at_undef)
 	SaveSystem.settings.set("language", language)
+	SaveSystem.settings.set("music_volume", music_volume)
